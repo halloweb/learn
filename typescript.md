@@ -349,6 +349,36 @@
     // 对于 Options 接口来说，你也可以使用 typeof 操作符来快速获取配置对象的「形状」
     type Options = typeof INIT_OPTIONS;   
   ```
+  #### type和interface
+  ```typescript
+    interface Animal {
+
+      name: string
+
+    }
+
+   // 可以继续在原有属性基础上，添加新属性：color
+
+    interface Animal {
+
+      color: string
+
+    }
+
+    type Animal = {
+
+      name: string
+
+    }
+    // type类型不支持属性扩展
+    // Error: Duplicate identifier 'Animal'
+
+    type Animal = {
+
+      color: string
+
+    }
+  ```
 ## 练习题
 1. SetOptional
   ```typescript
@@ -415,4 +445,50 @@
 
   ```
   ## [typescript练习题](https://github.com/semlinker/awesome-typescript/issues)
+
+
+  ## react
+  #### useState<T>
+   ```typescript
+      // 大部分情况下，TS 会自动为你推导 state 的类型
+      // user会自动推导为类型: {name: string, age: number}
+      const [user] = React.useState({ name: 'sj', age: 32 })
+      const userInfo: typeof user = {name: 'aaa', age: 12}
+      // 但是，一些状态初始值为空时（null），需要显示地声明类型
+      type User = {
+        name: string
+        age: number
+      }
+     const [user, setUser] = React.useState<User | null>(null)
+   ```
+   #### 获取未导出的Type
+   ```typescript
+      
+
+      // 获取参数类型
+
+      import { Button } from 'library' // 但是未导出props type
+
+      type ButtonProps = React.ComponentProps<typeof Button> // 获取props
+
+      type AlertButtonProps = Omit<ButtonProps, 'onClick'> // 去除onClick
+
+      const AlertButton: React.FC<AlertButtonProps> = props => (
+
+        <Button onClick={() => alert('hello')} {...props} />
+
+      )
+
+      // 获取返回值类型
+
+      function foo() {
+
+        return { baz: 1 }
+
+      }
+
+
+      type FooReturn = ReturnType<typeof foo> // { baz: number }
+
+   ```
 
